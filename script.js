@@ -1,14 +1,10 @@
-// URL de la API
 const API_URL = 'https://jsonplaceholder.typicode.com/users';
 
-// Elementos del DOM
 const usersContainer = document.getElementById('users-container');
 const loadingElement = document.getElementById('loading');
 
-// Objeto para almacenar instancias de mapas
 const maps = {};
 
-// Función principal para obtener usuarios
 async function fetchUsers() {
     try {
         showLoading();
@@ -73,19 +69,18 @@ function createUserCard(user) {
     userCard.dataset.userId = user.id;
     userCard.userData = user;
 
-    // NOTA: ponemos la .map-info fuera del contenedor del mapa para evitar superponer tiles
     userCard.innerHTML = `
         <div class="user-info">
             <h2>${escapeHtml(user.name)}</h2>
-            <p><strong>👤 Usuario:</strong> ${escapeHtml(user.username)}</p>
-            <p><strong>📧 Email:</strong> ${escapeHtml(user.email)}</p>
-            <p><strong>📞 Teléfono:</strong> ${escapeHtml(user.phone)}</p>
-            <p><strong>🏠 Dirección:</strong> ${escapeHtml(user.address.street)}, ${escapeHtml(user.address.city)}</p>
-            <p><strong>🏢 Compañía:</strong> ${escapeHtml(user.company.name)}</p>
+            <p><strong> Usuario:</strong> ${escapeHtml(user.username)}</p>
+            <p><strong> Email:</strong> ${escapeHtml(user.email)}</p>
+            <p><strong> Teléfono:</strong> ${escapeHtml(user.phone)}</p>
+            <p><strong> Dirección:</strong> ${escapeHtml(user.address.street)}, ${escapeHtml(user.address.city)}</p>
+            <p><strong> Compañía:</strong> ${escapeHtml(user.company.name)}</p>
         </div>
 
         <div class="map-info" id="mapinfo-${user.id}">
-            <p><strong>📍 Coordenadas:</strong> Lat: ${user.address.geo.lat}, Lng: ${user.address.geo.lng}</p>
+            <p><strong> Coordenadas:</strong> Lat: ${user.address.geo.lat}, Lng: ${user.address.geo.lng}</p>
             <div class="map-loading" id="loading-${user.id}">
                 <div class="loading-spinner"></div>
                 <p>Cargando mapa...</p>
@@ -107,7 +102,6 @@ function createUserCard(user) {
 function toggleCard(card, user) {
     const isExpanded = card.classList.contains('expanded');
 
-    // cerrar otras
     document.querySelectorAll('.user-card.expanded').forEach(expandedCard => {
         if (expandedCard !== card) {
             expandedCard.classList.remove('expanded');
@@ -121,7 +115,6 @@ function toggleCard(card, user) {
     if (!isExpanded) {
         card.classList.add('expanded');
 
-        // esperamos un poco más para que el layout termine (evita mapas con tiles faltantes)
         setTimeout(() => {
             initMap(user);
         }, 350);
@@ -137,10 +130,8 @@ function initMap(user) {
 
     if (!mapContainer) return;
 
-    // aparecer loading
     if (loadingEl) loadingEl.style.display = 'block';
 
-    // remover mapa previo si existe
     if (maps[user.id]) {
         try { maps[user.id].remove(); } catch(e){ /* ignore */ }
         delete maps[user.id];
@@ -154,7 +145,6 @@ function initMap(user) {
         return;
     }
 
-    // esperamos un poco para asegurar que el contenedor tiene tamaño real (especialmente en mobile)
     setTimeout(() => {
         try {
             const map = L.map(mapId, {
@@ -173,13 +163,11 @@ function initMap(user) {
             const tileLayer = L.tileLayer(provider.url, {
                 attribution: provider.attribution,
                 maxZoom: provider.maxZoom,
-                // fallback invisible tile to avoid broken icon
                 errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
             }).addTo(map);
 
             tileLayer.on('tileerror', () => {
                 console.warn('tileerror: intentar con otro proveedor o revisar red');
-                // si quieres puedes encadenar proveedores aquí
             });
 
             L.marker([lat, lng]).addTo(map)
@@ -187,7 +175,6 @@ function initMap(user) {
 
             if (loadingEl) loadingEl.style.display = 'none';
 
-            // invalidateSize después de que el mapa esté en DOM y visible
             setTimeout(() => {
                 try {
                     map.invalidateSize(true);
@@ -207,17 +194,15 @@ function initMap(user) {
 }
 
 function showMapError(mapContainer, message) {
-    // oculta loading si existe
     const loadingElement = mapContainer.previousElementSibling?.querySelector('.map-loading');
     if (loadingElement) loadingElement.style.display = 'none';
 
-    // evita duplicar
     const existing = mapContainer.querySelector('.map-error');
     if (existing) existing.remove();
 
     mapContainer.insertAdjacentHTML('beforeend', `
         <div class="map-error">
-            <h4>❌ Error al cargar el mapa</h4>
+            <h4> Error al cargar el mapa</h4>
             <p>${message}</p>
             <button onclick="retryMap(${mapContainer.id.split('-')[1]})">Reintentar</button>
         </div>
@@ -227,7 +212,6 @@ function showMapError(mapContainer, message) {
 function retryMap(userId) {
     const userCard = document.querySelector(`[data-user-id="${userId}"]`);
     if (userCard && userCard.classList.contains('expanded')) {
-        // quitar error
         const mapContainer = document.getElementById(`map-${userId}`);
         const errorElement = mapContainer.querySelector('.map-error');
         if (errorElement) errorElement.remove();
