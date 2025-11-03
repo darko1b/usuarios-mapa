@@ -1,0 +1,254 @@
+*{ 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+} 
+
+body{ 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 00%); 
+    min-height: 100vh;
+    padding: 20px;
+} 
+
+.container{ 
+    max-width: 1200px; 
+    margin: 0 auto; 
+} 
+
+h1{ 
+    text-align: center; 
+    color: white;
+    margin-bottom: 30px;
+    font-size: 2.5rem; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+} 
+
+.loading{ 
+    text-align: center; 
+    color: white; 
+    font-size: 1.2rem; 
+    padding: 40px; 
+    display: none;
+} 
+
+.loading-spinner{ 
+    border: 4px solid rgba(255, 255, 255, 0.3); 
+    border-radius: 50%; 
+    border-top: 4px solid white; 
+    width: 40px; 
+    height: 40px; 
+    animation: spin 1s linear infinite; 
+    margin: 0 auto 15px;
+} 
+
+@keyframes spin{ 
+    0% { transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+} 
+
+.users-container{ 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px; 
+    margin-top: 20px;
+} 
+
+.user-card{ 
+    background: white; 
+    border-radius: 15px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 25px; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    border: 3px solid transparent;
+    position: relative; 
+    overflow: visible;
+} 
+
+.user-card::before{ 
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px; 
+    background: linear-gradient(90deg, #667eea, #754ba2); 
+    border-radius: 15px 15px 0 0;
+} 
+
+.user-card:hover{ 
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border-color: #667eea;
+} 
+
+.user-card.expanded{ 
+    grid-column: 1 / -1; 
+    transform: scale(1.02); 
+    z-index: 10;
+} 
+
+.user-info{ 
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #f0f0f0; 
+    padding-bottom: 10px;
+} 
+
+.user-info p{ 
+    margin: 8px 0; 
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.4;
+} 
+
+.user-info strong{ 
+    color: #333;
+} 
+
+.user-map{ 
+    height: 400px; 
+    width: 100%; 
+    margin-top: 20px; 
+    border-radius: 10px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: none;
+    border: 2px solid #e0e0e0;
+    position: relative; 
+    background: #f8f9fa;
+} 
+
+.user-card.expanded .user-map{ 
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+ 
+.user-map .leaflet-container{ 
+    height: 100%; 
+    width: 100%; 
+    border-radius: 8px;
+    font-family: inherit; 
+} 
+
+.map-info{ 
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #667eea;
+    font-size: 0.9rem;
+} 
+
+.map-loading{ 
+    text-align: center; 
+    padding: 10px 0; 
+    color: #666;
+    display: none;
+}
+
+.map-error{ 
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; 
+    background: white;
+    padding: 25px;
+    border-radius: 10px; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%; 
+    max-width: 300px;
+} 
+
+.map-erros h4{ 
+    color: #e74c3c; 
+    margin-bottom: 10px;
+}
+
+.map-error p{ 
+    color: #666;
+    margin-bottom: 15px;
+} 
+
+.map-error button{ 
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    cursor: pointer; 
+    font-weight: bold;
+    transition: background 0-3s;
+} 
+
+.map-error button:hover{ 
+    background: #5a6fd8;
+} 
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 
+
+@media (max-width: 768px) {
+    .users-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .user-card.expanded {
+        grid-column: 1;
+        transform: none;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        padding: 0 15px;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    .user-card {
+        padding: 20px;
+        margin: 0 5px;
+    }
+
+    .user-map {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.7rem;
+    }
+
+    .user-info h2 {
+        font-size: 1.3rem;
+    }
+
+    .user-info p {
+        font-size: 0.9rem;
+    }
+
+    .user-map {
+        height: 250px;
+    }
+}

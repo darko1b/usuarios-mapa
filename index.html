@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios con mapas</title>
+    <link rel="stylesheet" href="styles.css"/> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body> 
+
+    <div class="conatiner">
+        <h1>Usuarios de JSONPlaceholder</h1> 
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Cargando usuarios...</p>
+        </div> 
+        <div id="users-container" class="users-container"></div>
+    </div> 
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> 
+    <script src="script.js"></script>
+    
+</body>
+</html>
